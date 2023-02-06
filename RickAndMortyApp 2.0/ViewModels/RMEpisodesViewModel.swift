@@ -45,8 +45,6 @@ final class RMEpisodesViewModel {
     
     func fetchAdditionalEpisodes() {
         guard let nextPage = nextPage else {
-            isLoadingMore = false
-            state.accept(.success)
             return
         }
          
