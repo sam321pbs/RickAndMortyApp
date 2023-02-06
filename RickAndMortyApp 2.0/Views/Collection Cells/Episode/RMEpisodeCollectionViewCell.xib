@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="gTV-IL-0wX" customClass="RMEpisodeCollectionViewCell" customModule="RickAndMortyApp_2_0" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="700" height="665"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="700" height="665"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sWg-uu-yaR">
+                        <rect key="frame" x="0.0" y="0.0" width="700" height="665"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VPP-c8-vQn">
+                                <rect key="frame" x="0.0" y="0.0" width="10" height="665"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="10" id="IZL-L7-7d5"/>
+                                </constraints>
+                            </view>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="X3z-aX-ntY">
+                                <rect key="frame" x="10" y="0.0" width="690" height="665"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vOM-n7-ukr" userLabel="Episode Label">
+                                        <rect key="frame" x="0.0" y="0.0" width="690" height="221.33333333333334"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tD6-Vk-Oqh" userLabel="Episode Name Label">
+                                        <rect key="frame" x="0.0" y="221.33333333333337" width="690" height="221.66666666666663"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Oxu-fT-CJb" userLabel="Air Date Label">
+                                        <rect key="frame" x="0.0" y="443" width="690" height="222"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="tD6-Vk-Oqh" firstAttribute="leading" secondItem="X3z-aX-ntY" secondAttribute="leading" id="4es-Ey-9l0"/>
+                                    <constraint firstAttribute="trailing" secondItem="Oxu-fT-CJb" secondAttribute="trailing" id="9qQ-R6-SKR"/>
+                                    <constraint firstAttribute="trailing" secondItem="vOM-n7-ukr" secondAttribute="trailing" id="Gqn-96-Is4"/>
+                                    <constraint firstItem="tD6-Vk-Oqh" firstAttribute="height" secondItem="X3z-aX-ntY" secondAttribute="height" multiplier="0.333" id="OyD-wv-io3"/>
+                                    <constraint firstItem="vOM-n7-ukr" firstAttribute="leading" secondItem="X3z-aX-ntY" secondAttribute="leading" id="ZhW-h5-KFa"/>
+                                    <constraint firstAttribute="trailing" secondItem="tD6-Vk-Oqh" secondAttribute="trailing" id="aWF-xh-QPG"/>
+                                    <constraint firstItem="vOM-n7-ukr" firstAttribute="height" secondItem="X3z-aX-ntY" secondAttribute="height" multiplier="0.333" id="eTo-x9-buu"/>
+                                    <constraint firstItem="Oxu-fT-CJb" firstAttribute="leading" secondItem="X3z-aX-ntY" secondAttribute="leading" id="mlM-cQ-CDQ"/>
+                                </constraints>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="secondarySystemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="VPP-c8-vQn" secondAttribute="bottom" id="JJ4-oD-GLJ"/>
+                            <constraint firstItem="VPP-c8-vQn" firstAttribute="top" secondItem="sWg-uu-yaR" secondAttribute="top" id="h9G-KF-sXZ"/>
+                        </constraints>
+                    </stackView>
+                </subviews>
+            </view>
+            <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
+            <constraints>
+                <constraint firstItem="sWg-uu-yaR" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="8A8-8p-o0j"/>
+                <constraint firstItem="sWg-uu-yaR" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="JXD-7C-d3i"/>
+                <constraint firstAttribute="trailing" secondItem="sWg-uu-yaR" secondAttribute="trailing" id="Sdd-nx-5d9"/>
+                <constraint firstAttribute="bottom" secondItem="sWg-uu-yaR" secondAttribute="bottom" id="hwe-ob-z8J"/>
+            </constraints>
+            <size key="customSize" width="700" height="665"/>
+            <connections>
+                <outlet property="airDateLabel" destination="Oxu-fT-CJb" id="aat-hJ-NoX"/>
+                <outlet property="episodeNameLabel" destination="tD6-Vk-Oqh" id="sg3-NL-aHC"/>
+                <outlet property="episodeNumberLabel" destination="vOM-n7-ukr" id="KE3-ym-eEM"/>
+            </connections>
+            <point key="canvasLocation" x="635.1145038167939" y="236.26760563380282"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <systemColor name="secondarySystemBackgroundColor">
+            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>
