@@ -1,8 +1,8 @@
 //
 //  RMSingleLocation.swift
-//  Rick and Morty App
+//  RickAndMortyApp 2.0
 //
-//  Created by Samuel Mengistu on 1/17/23.
+//  Created by Samuel Mengistu on 4/24/23.
 //
 
 import Foundation

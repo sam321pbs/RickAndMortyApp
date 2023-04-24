@@ -211,7 +211,7 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		A04170A329F6E187000AE307 /* Models2 */ = {
+		A04170A329F6E187000AE307 /* Models */ = {
 			isa = PBXGroup;
 			children = (
 				A04170C629F6E403000AE307 /* ViewStates */,
@@ -220,7 +220,7 @@
 				A04170A729F6E1D6000AE307 /* UIModels */,
 				A04170A429F6E193000AE307 /* Other */,
 			);
-			path = Models2;
+			path = Models;
 			sourceTree = "<group>";
 		};
 		A04170A429F6E193000AE307 /* Other */ = {
@@ -300,7 +300,7 @@
 		A0823A47297F1449003F5F2E /* RickAndMortyApp 2.0 */ = {
 			isa = PBXGroup;
 			children = (
-				A04170A329F6E187000AE307 /* Models2 */,
+				A04170A329F6E187000AE307 /* Models */,
 				A0A41C762980A1F7000D3010 /* Utils */,
 				A0A41C7029805EAE000D3010 /* ViewModels */,
 				A08C44B1297F556A0018023B /* Network */,
