@@ -1,6 +1,6 @@
 # Rick and Morty App
 
-The Rick and Morty App is an iOS app built to show all the characters, episodes, and locations in the Rick and Morty show.
+The Rick and Morty App is an immersive iOS application designed to showcase a comprehensive collection of characters, episodes, and locations from the beloved Rick and Morty show.
 
 ## App Images
 
