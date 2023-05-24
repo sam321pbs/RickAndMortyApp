@@ -9,12 +9,12 @@ import Foundation
 import RxSwift
 
 protocol RMCharactersRepository {
-    func getCharactersByPage(page: Int) -> Observable<RMCharactersResponse>
-    func getCharactersByIds(ids: [Int]) -> Observable<[RMCharacter]>
-    func getCharactersById(id: Int) -> Observable<RMCharacter>
+    func getCharactersByPage(page: Int) -> Single<RMCharactersResponse>
+    func getCharactersByIds(ids: [Int]) -> Single<[RMCharacter]>
+    func getCharactersById(id: Int) -> Single<RMCharacter>
     func getCharactersWithFilters(
         name: String?,
         status: RMCharacterStatus?,
         gender: RMCharacterGender?
-    ) -> Observable<RMCharactersResponse>
+    ) -> Single<RMCharactersResponse>
 }

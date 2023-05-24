@@ -8,8 +8,8 @@
 import RxSwift
 
 protocol RMEpisodesDataSource {
-    func getEpisodesByPage(page: Int) -> Observable<RMEpisodesResponse>
-    func getEpisodesByIds(ids: [Int]) -> Observable<[RMEpisode]>
-    func getEpisodeById(id: Int) -> Observable<RMEpisode>
-    func getEpisodesWithFilters(name: String?) -> Observable<RMEpisodesResponse>
+    func getEpisodesByPage(page: Int) -> Single<RMEpisodesResponse>
+    func getEpisodesByIds(ids: [Int]) -> Single<[RMEpisode]>
+    func getEpisodeById(id: Int) -> Single<RMEpisode>
+    func getEpisodesWithFilters(name: String?) -> Single<RMEpisodesResponse>
 }

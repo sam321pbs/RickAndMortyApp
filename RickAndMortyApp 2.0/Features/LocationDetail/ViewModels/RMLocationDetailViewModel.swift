@@ -34,22 +34,7 @@ final class RMLocationDetailViewModel {
     // MARK: - Public
     
     func fetchLocationDetails(location: RMLocation) {
-        locationDetailUIModelObserver(location: location).subscribe(
-            onNext: {[weak self] sections in
-                guard let me = self else { return }
-                me.sections = sections
-                me.viewState.accept(.success)
-            }, onError: {[weak self] error in
-                guard let me = self else { return }
-                print("Error getting Location details")
-                me.viewState.accept(.error(error))
-            }
-        ).disposed(by: disposeBag)
-    }
-    
-    // MARK: - Private
-    
-    private func locationDetailUIModelObserver(location: RMLocation) -> Observable<[RMLocationDetailViewModel.SectionType]> {
+        
         let characterIds: [Int] = location.residents.map {
             if let number = $0.getLastNumberInUrl() {
                 return number
@@ -61,26 +46,25 @@ final class RMLocationDetailViewModel {
         print("character count \(characterIds.count)")
         
         
-        let charactersObservable = self.charactersRepo.getCharactersByIds(ids: characterIds)
-        
-        return charactersObservable.flatMap({ characters -> Observable<[RMLocationDetailViewModel.SectionType]> in
-            return Observable<[RMLocationDetailViewModel.SectionType]>.create { (observer) -> Disposable in
+        charactersRepo.getCharactersByIds(ids: characterIds).subscribe(
+            onSuccess: { [weak self] characters in
+                guard let me = self else { return }
+                
                 let sections: [RMLocationDetailViewModel.SectionType] = [
-                    .information(location: self.convertLocationToUIInfo(location: location)),
+                    .information(location: me.convertLocationToUIInfo(location: location)),
                     .characters(characters: characters)
                 ]
-                observer.onNext(sections)
-                return Disposables.create()
-            }
-        })
+                me.sections = sections
+                me.viewState.accept(.success)
+        },
+            onFailure: {[weak self] error in
+                guard let me = self else { return }
+                print("Error getting Location details")
+                me.viewState.accept(.error(error))
+            }).disposed(by: disposeBag)
     }
     
-    private func locationDetailUIModelObserverEmpty() -> Observable<[RMLocationDetailViewModel.SectionType]> {
-        return Observable<[RMLocationDetailViewModel.SectionType]>.create { (observer) -> Disposable in
-            observer.onNext([])
-            return Disposables.create()
-        }
-    }
+    // MARK: - Private
     
     private func convertLocationToUIInfo(location: RMLocation) -> [RMLocationInformationUIModel] {
         return [

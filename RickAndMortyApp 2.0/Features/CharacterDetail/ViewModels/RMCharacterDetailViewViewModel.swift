@@ -70,12 +70,12 @@ final class RMCharacterDetailViewViewModel {
         
         if episodes.count == 1 {
             episodesRepo.getEpisodeById(id: episodes[0]).subscribe(
-                onNext: { [weak self] episode in
+                onSuccess: { [weak self] episode in
                     guard let me = self else { return }
                     me.sections.append(SectionType.episodes(episodes: [episode.convertToUIModel()]))
                     me.viewState.accept(.success)
                 },
-                onError: { [weak self] error in
+                onFailure: { [weak self] error in
                     guard let me = self else { return }
                     print("Error getting episode")
                     me.viewState.accept(.error(error))
@@ -83,13 +83,13 @@ final class RMCharacterDetailViewViewModel {
             ).disposed(by: disposeBag)
         } else {
             episodesRepo.getEpisodesByIds(ids: episodes).subscribe(
-                onNext: { [weak self] episodes in
+                onSuccess: { [weak self] episodes in
                     guard let me = self else { return }
                     let episodesUIModels = episodes.map { $0.convertToUIModel() }
                     me.sections.append(SectionType.episodes(episodes: episodesUIModels))
                     me.viewState.accept(.success)
                 },
-                onError: { [weak self] error in
+                onFailure: { [weak self] error in
                     guard let me = self else { return }
                     print("Error getting episodes")
                     me.viewState.accept(.error(error))

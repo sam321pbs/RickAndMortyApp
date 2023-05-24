@@ -11,19 +11,19 @@ struct RMEpisodesRepositoryImpl: RMEpisodesRepository {
     
     let dataSouce: RMEpisodesDataSource
     
-    func getEpisodeById(id: Int) -> Observable<RMEpisode> {
+    func getEpisodeById(id: Int) -> Single<RMEpisode> {
         return dataSouce.getEpisodeById(id: id)
     }
     
-    func getEpisodesByPage(page: Int) -> Observable<RMEpisodesResponse> {
+    func getEpisodesByPage(page: Int) -> Single<RMEpisodesResponse> {
         return dataSouce.getEpisodesByPage(page: page)
     }
     
-    func getEpisodesByIds(ids: [Int]) -> Observable<[RMEpisode]> {
+    func getEpisodesByIds(ids: [Int]) -> Single<[RMEpisode]> {
         return dataSouce.getEpisodesByIds(ids: ids)
     }
     
-    func getEpisodesWithFilters(name: String?) -> Observable<RMEpisodesResponse> {
+    func getEpisodesWithFilters(name: String?) -> Single<RMEpisodesResponse> {
         return dataSouce.getEpisodesWithFilters(name: name)
     }
 }

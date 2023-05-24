@@ -10,25 +10,21 @@ import RxSwift
 
 struct RMCharactersRepositoryImpl: RMCharactersRepository {
     
-    var dataSouce: RMCharactersDataSource!
+    let dataSouce: RMCharactersDataSource
     
-    init(dataSouce: RMCharactersDataSource) {
-        self.dataSouce = dataSouce
-    }
-    
-    func getCharactersByPage(page: Int) -> Observable<RMCharactersResponse> {
+    func getCharactersByPage(page: Int) -> Single<RMCharactersResponse> {
         return dataSouce.getCharactersByPage(page: page)
     }
     
-    func getCharactersByIds(ids: [Int]) -> Observable<[RMCharacter]> {
+    func getCharactersByIds(ids: [Int]) -> Single<[RMCharacter]> {
         return dataSouce.getCharactersByIds(ids: ids)
     }
     
-    func getCharactersById(id: Int) -> Observable<RMCharacter> {
+    func getCharactersById(id: Int) -> Single<RMCharacter> {
         return dataSouce.getCharacterById(id: id)
     }
     
-    func getCharactersWithFilters(name: String?, status: RMCharacterStatus?, gender: RMCharacterGender?) -> Observable<RMCharactersResponse> {
+    func getCharactersWithFilters(name: String?, status: RMCharacterStatus?, gender: RMCharacterGender?) -> Single<RMCharactersResponse> {
         return dataSouce.getCharactersWithFilters(name: name, status: status, gender: gender)
     }
 }

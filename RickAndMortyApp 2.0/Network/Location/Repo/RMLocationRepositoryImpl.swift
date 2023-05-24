@@ -9,25 +9,21 @@ import RxSwift
 
 struct RMLocationRepositoryImpl: RMLocationRepository {
 
-    private let dataSouce: RMLocationDataSource
+    let dataSouce: RMLocationDataSource
     
-    init(dataSouce: RMLocationDataSource) {
-        self.dataSouce = dataSouce
-    }
-    
-    func getLocationsByPage(page: Int) -> Observable<RMLocationsResponse> {
+    func getLocationsByPage(page: Int) -> Single<RMLocationsResponse> {
         return dataSouce.getLocationsByPage(page: page)
     }
     
-    func getLocationsByIds(ids: [Int]) -> Observable<[RMLocation]> {
+    func getLocationsByIds(ids: [Int]) -> Single<[RMLocation]> {
         return dataSouce.getLocationsByIds(ids: ids)
     }
     
-    func getLocationById(id: Int) -> Observable<RMLocation> {
+    func getLocationById(id: Int) -> Single<RMLocation> {
         return dataSouce.getLocationById(id: id)
     }
     
-    func getLocationsWithFilters(name: String?, type: String?) -> Observable<RMLocationsResponse> {
+    func getLocationsWithFilters(name: String?, type: String?) -> Single<RMLocationsResponse> {
         return dataSouce.getLocationsWithFilters(name: name, type: type)
     }
 }

@@ -33,10 +33,10 @@ final class RMEpisodesViewModel {
     func fetchEpisodesFirstPage() {
         state.accept(.loading)
         episodesRepo.getEpisodesByPage(page: 1).subscribe(
-            onNext: {[weak self] response in
+            onSuccess: {[weak self] response in
                 guard let me = self else { return }
                 me.handleEpisodeResponse(response)
-            }, onError: {[weak self] error in
+            }, onFailure: {[weak self] error in
                 guard let me = self else { return }
                 me.handleError(error)
             }
@@ -50,12 +50,12 @@ final class RMEpisodesViewModel {
          
         isLoadingMore = true
         episodesRepo.getEpisodesByPage(page: nextPage).subscribe(
-            onNext: {[weak self] response in
+            onSuccess: {[weak self] response in
                 guard let me = self else { return }
                 me.isLoadingMore = false
                 me.handleEpisodeResponse(response)
                 
-            }, onError: {[weak self] error in
+            }, onFailure: {[weak self] error in
                 guard let me = self else { return }
                 me.handleError(error)
             }

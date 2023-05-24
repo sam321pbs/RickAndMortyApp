@@ -47,13 +47,13 @@ final class RMLocationViewModel {
     
     private func fetch(page: Int) {
         repo.getLocationsByPage(page: page).subscribe(
-            onNext: {[weak self] response in
+            onSuccess: {[weak self] response in
                 guard let me = self else { return }
                 me.handleEpisodeResponse(response)
-            }, onError: {[weak self] error in
+            }, onFailure: {[weak self] error in
                 guard let me = self else { return }
                 me.handleError(error)
-            }, onCompleted: {}
+            }
         ).disposed(by: disposeBag)
     }
     

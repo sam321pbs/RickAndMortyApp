@@ -35,11 +35,13 @@ final class RMCharactersViewModel {
     
     func fetchCharacters() {
         state.accept(.loading)
+        
         repo.getCharactersByPage(page: 1).subscribe(
-            onNext: {[weak self] response in
+            onSuccess: {[weak self] response in
                 guard let me = self else { return }
                 me.handleSuccessResponse(response: response)
-            }, onError: {[weak self] error in
+            },
+            onFailure: {[weak self] error in
                 guard let me = self else { return }
                 print("Error getting characters")
                 me.state.accept(.error(error))
@@ -54,13 +56,13 @@ final class RMCharactersViewModel {
         
         isLoadingAdditionalCharacters = true
         repo.getCharactersByPage(page: self.nextPage ?? 1).subscribe(
-            onNext: {[weak self] response in
-                
+            onSuccess: {[weak self] response in
                 guard let me = self else { return }
 
                 me.handleSuccessResponse(response: response)
                 me.isLoadingAdditionalCharacters = false
-            }, onError: {[weak self] error in
+            },
+            onFailure: {[weak self] error in
                 guard let me = self else { return }
                 self?.isLoadingAdditionalCharacters = false
                 me.state.accept(.error(error))

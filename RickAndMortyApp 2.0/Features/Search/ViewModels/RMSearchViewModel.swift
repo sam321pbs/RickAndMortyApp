@@ -91,10 +91,10 @@ final class RMSearchViewModel {
     func fetchCharacters(name: String?, status: RMCharacterStatus?, gender: RMCharacterGender?) {
         state.accept(.loading)
         characterRepo.getCharactersWithFilters(name: name, status: status, gender: gender).subscribe(
-            onNext: {[weak self] response in
+            onSuccess: {[weak self] response in
                 guard let me = self else { return }
                 me.handleCharacterSuccessResponse(response: response)
-            }, onError: {[weak self] error in
+            }, onFailure: {[weak self] error in
                 guard let me = self else { return }
                 me.state.accept(.error(error))
             }
@@ -107,11 +107,11 @@ final class RMSearchViewModel {
         }
         isLoadingAdditionalCharacters = true
         characterRepo.getCharactersWithFilters(name: name, status: status, gender: gender).subscribe(
-            onNext: {[weak self] response in
+            onSuccess: {[weak self] response in
                 guard let me = self else { return }
                 me.handleCharacterSuccessResponse(response: response)
                 me.isLoadingAdditionalCharacters = false
-            }, onError: {[weak self] error in
+            }, onFailure: {[weak self] error in
                 guard let me = self else { return }
                 me.state.accept(.error(error))
                 me.isLoadingAdditionalCharacters = false
@@ -132,14 +132,14 @@ final class RMSearchViewModel {
     func fetchEpisodes(by name: String) {
         state.accept(.loading)
         episodesRepo.getEpisodesWithFilters(name: name).subscribe(
-            onNext: {[weak self] episodesResponse in
+            onSuccess: {[weak self] episodesResponse in
                 guard let me = self else { return }
                 if let nextPage = episodesResponse.info.next {
                     me.nextPage = Int(nextPage.getQueryStringParameter(param: "page") ?? "-1")
                 }
                 me.episodes = episodesResponse.results
                 me.state.accept(.success)
-            }, onError: {[weak self] error in
+            }, onFailure: {[weak self] error in
                 guard let me = self else { return }
                 me.state.accept(.error(error))
             }
@@ -152,7 +152,7 @@ final class RMSearchViewModel {
         }
         isLoadingAdditionalCharacters = true
         episodesRepo.getEpisodesWithFilters(name: name).subscribe(
-            onNext: {[weak self] episodesResponse in
+            onSuccess: {[weak self] episodesResponse in
                 guard let me = self else { return }
                 if let nextPage = episodesResponse.info.next {
                     me.nextPage = Int(nextPage.getQueryStringParameter(param: "page") ?? "-1")
@@ -160,7 +160,7 @@ final class RMSearchViewModel {
                 me.episodes.append(contentsOf: episodesResponse.results)
                 me.state.accept(.success)
                 me.isLoadingAdditionalCharacters = false
-            }, onError: {[weak self] error in
+            }, onFailure: {[weak self] error in
                 guard let me = self else { return }
                 me.state.accept(.error(error))
                 me.isLoadingAdditionalCharacters = false
@@ -173,12 +173,12 @@ final class RMSearchViewModel {
     func fetchLocations(by name: String?, type: String?) {
         state.accept(.loading)
         locationsRepo.getLocationsWithFilters(name: name, type: type).subscribe(
-            onNext: { [weak self] response in
+            onSuccess: { [weak self] response in
                 guard let me = self else { return }
                 me.locations.append(contentsOf: response.results)
                 me.state.accept(.success)
             },
-            onError: { [weak self] error in
+            onFailure: { [weak self] error in
                 guard let me = self else { return }
                 me.state.accept(.error(error))
             }

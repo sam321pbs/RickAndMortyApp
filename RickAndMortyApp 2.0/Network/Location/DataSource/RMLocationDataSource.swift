@@ -8,11 +8,11 @@
 import RxSwift
 
 protocol RMLocationDataSource {
-    func getLocationsByPage(page: Int) -> Observable<RMLocationsResponse>
-    func getLocationsByIds(ids: [Int]) -> Observable<[RMLocation]>
-    func getLocationById(id: Int) -> Observable<RMLocation>
+    func getLocationsByPage(page: Int) -> Single<RMLocationsResponse>
+    func getLocationsByIds(ids: [Int]) -> Single<[RMLocation]>
+    func getLocationById(id: Int) -> Single<RMLocation>
     func getLocationsWithFilters(
         name: String?,
         type: String?
-    ) -> Observable<RMLocationsResponse>
+    ) -> Single<RMLocationsResponse>
 }
