@@ -5,16 +5,14 @@
 //  Created by Samuel Mengistu on 2/1/23.
 //
 
-import RxSwift
-import RxCocoa
+import Combine
 
-final class RMLocationDetailViewModel {
+@MainActor
+final class RMLocationDetailViewModel: ObservableObject {
     
     private var charactersRepo: RMCharactersRepository
-        
-    private let disposeBag = DisposeBag()
     
-    var viewState: BehaviorRelay<RMViewState> = BehaviorRelay(value: .initial)
+    @Published var viewState: RMViewState = .initial
     
     public private(set) var sections: [RMLocationDetailViewModel.SectionType] = []
     
@@ -35,6 +33,27 @@ final class RMLocationDetailViewModel {
     
     func fetchLocationDetails(location: RMLocation) {
         
+        let characterIds = getCharacterIds(location: location)
+        
+        Task.init {
+            do {
+                let characterResponse = try await charactersRepo.getCharactersByIds(ids: characterIds)
+                let sections: [RMLocationDetailViewModel.SectionType] = [
+                    .information(location: convertLocationToUIInfo(location: location)),
+                    .characters(characters: characterResponse)
+                ]
+                self.sections = sections
+                viewState = .success
+            } catch let error {
+                print("Error getting Location details")
+                viewState = .error(error)
+            }
+        }
+    }
+    
+    // MARK: - Private
+    
+    private func getCharacterIds(location: RMLocation) -> [Int] {
         let characterIds: [Int] = location.residents.map {
             if let number = $0.getLastNumberInUrl() {
                 return number
@@ -45,26 +64,8 @@ final class RMLocationDetailViewModel {
         
         print("character count \(characterIds.count)")
         
-        
-        charactersRepo.getCharactersByIds(ids: characterIds).subscribe(
-            onSuccess: { [weak self] characters in
-                guard let me = self else { return }
-                
-                let sections: [RMLocationDetailViewModel.SectionType] = [
-                    .information(location: me.convertLocationToUIInfo(location: location)),
-                    .characters(characters: characters)
-                ]
-                me.sections = sections
-                me.viewState.accept(.success)
-        },
-            onFailure: {[weak self] error in
-                guard let me = self else { return }
-                print("Error getting Location details")
-                me.viewState.accept(.error(error))
-            }).disposed(by: disposeBag)
+        return characterIds
     }
-    
-    // MARK: - Private
     
     private func convertLocationToUIInfo(location: RMLocation) -> [RMLocationInformationUIModel] {
         return [

@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import RxSwift
+import Combine
 
 final class RMCharacterDetailCollectionViewController: UICollectionViewController {
     
@@ -14,29 +14,31 @@ final class RMCharacterDetailCollectionViewController: UICollectionViewControlle
     
     var viewModel: RMCharacterDetailViewViewModel!
     
-    private let disposeBag = DisposeBag()
+    private var cancellable: AnyCancellable?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .blue
         title = viewModel.character.name
         
-        viewModel.viewState.subscribe(onNext: { [weak self] state in
-            guard let me = self else { return }
-            
-            switch state {
-            case .success:
-                me.episodesLoaded()
-            case .initial, .loading, .error:
-                return
-            }
-        }).disposed(by: disposeBag)
+        cancellable = viewModel.$viewState.sink { [weak self] state in
+            self?.render(state: state)
+        }
         
         registerCellViews()
         
         setupCompositionalLayout()
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(didTapShare))
+    }
+    
+    private func render(state: RMViewState) {
+        switch state {
+        case .success:
+            episodesLoaded()
+        case .initial, .loading, .error:
+            return
+        }
     }
     
     @objc

@@ -58,6 +58,6 @@ extension RMPickerViewController: UIPickerViewDataSource, UIPickerViewDelegate {
     
     // Capture the picker view selection
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        viewModel.selectedItem.accept(viewModel.pickerData[row])
+        viewModel.selectedItem = viewModel.pickerData[row]
     }
 }

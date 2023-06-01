@@ -7,7 +7,7 @@
 
 import UIKit
 import Alamofire
-import RxSwift
+import Combine
 
 final class RMCharacterViewController: UIViewController {
     
@@ -17,7 +17,7 @@ final class RMCharacterViewController: UIViewController {
     
     var viewModel: RMCharactersViewModel!
     
-    private let disposeBag = DisposeBag()
+    private var cancellable: AnyCancellable?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,12 +38,10 @@ final class RMCharacterViewController: UIViewController {
             )
         )
         
-        viewModel.state.asObservable().subscribe(
-            onNext: { [weak self] state in
-                guard let me = self else { return }
-                me.updateViewFromState(state)
-                
-            }).disposed(by: disposeBag)
+        cancellable = viewModel.$viewState.sink { [weak self] state in
+            guard let me = self else { return }
+            me.updateViewFromState(state)
+        }
         
         viewModel.fetchCharacters()
     }

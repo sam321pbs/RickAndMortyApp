@@ -5,15 +5,15 @@
 //  Created by Samuel Mengistu on 2/1/23.
 //
 
-import RxSwift
-import RxCocoa
-
 // Responsibilites
 // - show search results
 // - show no results
 // - kick off api request
 
-final class RMSearchViewModel {
+import Combine
+
+@MainActor
+final class RMSearchViewModel: ObservableObject {
     
     private let characterRepo: RMCharactersRepository
     
@@ -21,11 +21,9 @@ final class RMSearchViewModel {
     
     private let locationsRepo: RMLocationRepository
     
-    private let disposeBag = DisposeBag()
-    
     private var nextPage: Int?
     
-    var state: BehaviorRelay<RMViewState> = BehaviorRelay(value: .initial)
+    @Published var viewState: RMViewState = .initial
     
     var isLoadingAdditionalCharacters = false
     
@@ -89,16 +87,16 @@ final class RMSearchViewModel {
     // MARK: - Characters
     
     func fetchCharacters(name: String?, status: RMCharacterStatus?, gender: RMCharacterGender?) {
-        state.accept(.loading)
-        characterRepo.getCharactersWithFilters(name: name, status: status, gender: gender).subscribe(
-            onSuccess: {[weak self] response in
-                guard let me = self else { return }
-                me.handleCharacterSuccessResponse(response: response)
-            }, onFailure: {[weak self] error in
-                guard let me = self else { return }
-                me.state.accept(.error(error))
+        viewState = .loading
+        
+        Task.init {
+            do {
+                let characterResponse = try await characterRepo.getCharactersWithFilters(name: name, status: status, gender: gender)
+                handleCharacterSuccessResponse(response: characterResponse)
+            } catch let error {
+                viewState = .error(error)
             }
-        ).disposed(by: disposeBag)
+        }
     }
     
     func fetchAddtionalCharacters(name: String?, status: RMCharacterStatus?, gender: RMCharacterGender?) {
@@ -106,17 +104,17 @@ final class RMSearchViewModel {
             return
         }
         isLoadingAdditionalCharacters = true
-        characterRepo.getCharactersWithFilters(name: name, status: status, gender: gender).subscribe(
-            onSuccess: {[weak self] response in
-                guard let me = self else { return }
-                me.handleCharacterSuccessResponse(response: response)
-                me.isLoadingAdditionalCharacters = false
-            }, onFailure: {[weak self] error in
-                guard let me = self else { return }
-                me.state.accept(.error(error))
-                me.isLoadingAdditionalCharacters = false
+        
+        Task.init {
+            do {
+                let characterResponse = try await characterRepo.getCharactersWithFilters(name: name, status: status, gender: gender)
+                handleCharacterSuccessResponse(response: characterResponse)
+                isLoadingAdditionalCharacters = false
+            } catch let error {
+                viewState = .error(error)
+                isLoadingAdditionalCharacters = false
             }
-        ).disposed(by: disposeBag)
+        }
     }
     
     private func handleCharacterSuccessResponse(response: RMCharactersResponse) {
@@ -124,26 +122,26 @@ final class RMSearchViewModel {
             self.nextPage = Int(nextPage.getQueryStringParameter(param: "page") ?? "-1")
         }
         characters.append(contentsOf: response.results)
-        state.accept(.success)
+        viewState = .success
     }
     
     // MARK: - Episodes
     
     func fetchEpisodes(by name: String) {
-        state.accept(.loading)
-        episodesRepo.getEpisodesWithFilters(name: name).subscribe(
-            onSuccess: {[weak self] episodesResponse in
-                guard let me = self else { return }
+        viewState = .loading
+        
+        Task.init {
+            do {
+                let episodesResponse = try await self.episodesRepo.getEpisodesWithFilters(name: name)
                 if let nextPage = episodesResponse.info.next {
-                    me.nextPage = Int(nextPage.getQueryStringParameter(param: "page") ?? "-1")
+                    self.nextPage = Int(nextPage.getQueryStringParameter(param: "page") ?? "-1")
                 }
-                me.episodes = episodesResponse.results
-                me.state.accept(.success)
-            }, onFailure: {[weak self] error in
-                guard let me = self else { return }
-                me.state.accept(.error(error))
+                episodes = episodesResponse.results
+                viewState = .success
+            } catch let error {
+                viewState = .error(error)
             }
-        ).disposed(by: disposeBag)
+        }
     }
     
     func fetchAddtionalEpisodes(name: String) {
@@ -151,37 +149,36 @@ final class RMSearchViewModel {
             return
         }
         isLoadingAdditionalCharacters = true
-        episodesRepo.getEpisodesWithFilters(name: name).subscribe(
-            onSuccess: {[weak self] episodesResponse in
-                guard let me = self else { return }
+        
+        Task.init {
+            do {
+                let episodesResponse = try await self.episodesRepo.getEpisodesWithFilters(name: name)
                 if let nextPage = episodesResponse.info.next {
-                    me.nextPage = Int(nextPage.getQueryStringParameter(param: "page") ?? "-1")
+                    self.nextPage = Int(nextPage.getQueryStringParameter(param: "page") ?? "-1")
                 }
-                me.episodes.append(contentsOf: episodesResponse.results)
-                me.state.accept(.success)
-                me.isLoadingAdditionalCharacters = false
-            }, onFailure: {[weak self] error in
-                guard let me = self else { return }
-                me.state.accept(.error(error))
-                me.isLoadingAdditionalCharacters = false
+                episodes.append(contentsOf: episodesResponse.results)
+                viewState = .success
+                isLoadingAdditionalCharacters = false
+            } catch let error {
+                viewState = .error(error)
+                isLoadingAdditionalCharacters = false
             }
-        ).disposed(by: disposeBag)
+        }
     }
     
     // MARK: - Location
     
     func fetchLocations(by name: String?, type: String?) {
-        state.accept(.loading)
-        locationsRepo.getLocationsWithFilters(name: name, type: type).subscribe(
-            onSuccess: { [weak self] response in
-                guard let me = self else { return }
-                me.locations.append(contentsOf: response.results)
-                me.state.accept(.success)
-            },
-            onFailure: { [weak self] error in
-                guard let me = self else { return }
-                me.state.accept(.error(error))
+        viewState = .loading
+        
+        Task.init {
+            do {
+                let locationResponse = try await self.locationsRepo.getLocationsWithFilters(name: name, type: type)
+                locations.append(contentsOf: locationResponse.results)
+                viewState = .success
+            } catch let error {
+                viewState = .error(error)
             }
-        ).disposed(by: disposeBag)
+        }
     }
 }

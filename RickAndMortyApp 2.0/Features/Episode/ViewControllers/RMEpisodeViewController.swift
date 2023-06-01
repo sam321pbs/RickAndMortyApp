@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import RxSwift
+import Combine
 
 final class RMEpisodeViewController: UIViewController {
     
@@ -16,7 +16,7 @@ final class RMEpisodeViewController: UIViewController {
     
     var viewModel: RMEpisodesViewModel!
     
-    private let disposeBag = DisposeBag()
+    private var cancellable: AnyCancellable?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,12 +37,10 @@ final class RMEpisodeViewController: UIViewController {
             )
         )
         
-        viewModel.state.asObservable().subscribe(
-            onNext: { [weak self] state in
-                guard let me = self else { return }
-                me.onViewStateUpdated(state)
-                
-            }).disposed(by: disposeBag)
+        cancellable = viewModel.$viewState.sink { [weak self] state in
+            guard let me = self else { return }
+            me.onViewStateUpdated(state)
+        }
         
         viewModel.fetchEpisodesFirstPage()
     }

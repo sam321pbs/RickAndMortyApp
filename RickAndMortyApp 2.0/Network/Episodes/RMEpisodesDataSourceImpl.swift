@@ -5,24 +5,21 @@
 //  Created by Samuel Mengistu on 1/26/23.
 //
 
-import RxSwift
-import Alamofire
-
 struct RMEpisodesDataSourceImpl: RMEpisodesDataSource {
 
-    func getEpisodeById(id: Int) -> Single<RMEpisode> {
-        return DataSourceHelper.makeSingleAlamoRequest(RMApi.getEpisodesByIdsDataRequest(ids: [id]))
+    func getEpisodeById(id: Int) async throws -> RMEpisode {
+        return try await DataSourceHelper.makeSingleRequest(RMApi.getEpisodesByIdsDataRequest(ids: [id]))
     }
     
-    func getEpisodesByIds(ids: [Int]) -> Single<[RMEpisode]> {
-        return DataSourceHelper.makeSingleAlamoRequest(RMApi.getEpisodesByIdsDataRequest(ids: ids))
+    func getEpisodesByIds(ids: [Int]) async throws -> [RMEpisode] {
+        return try await DataSourceHelper.makeSingleRequest(RMApi.getEpisodesByIdsDataRequest(ids: ids))
     }
         
-    func getEpisodesByPage(page: Int) -> Single<RMEpisodesResponse> {
-        return DataSourceHelper.makeSingleAlamoRequest(RMApi.getEpisodesByPageDataRequest(page: page))
+    func getEpisodesByPage(page: Int) async throws -> RMEpisodesResponse {
+        return try await DataSourceHelper.makeSingleRequest(RMApi.getEpisodesByPageDataRequest(page: page))
     }
     
-    func getEpisodesWithFilters(name: String?) -> Single<RMEpisodesResponse> {
-        return DataSourceHelper.makeSingleAlamoRequest(RMApi.getEpisodesWithFiltersDataRequest(name: name))
+    func getEpisodesWithFilters(name: String?) async throws -> RMEpisodesResponse {
+        return try await DataSourceHelper.makeSingleRequest(RMApi.getEpisodesWithFiltersDataRequest(name: name))
     }
 }

@@ -5,18 +5,15 @@
 //  Created by Samuel Mengistu on 1/25/23.
 //
 
-import RxSwift
-import RxCocoa
+import Combine
 
-final class RMCharacterDetailViewViewModel {
+final class RMCharacterDetailViewViewModel: ObservableObject  {
     
     private let episodesRepo: RMEpisodesRepository
     
     public var sections: [SectionType] = []
     
-    private let disposeBag = DisposeBag()
-    
-    var viewState: BehaviorRelay<RMViewState> = BehaviorRelay(value: .initial)
+    @Published var viewState: RMViewState = .initial
     
     let character: RMCharacter
     
@@ -68,33 +65,25 @@ final class RMCharacterDetailViewViewModel {
             return -1
         }.filter { number in number >= 0 }
         
-        if episodes.count == 1 {
-            episodesRepo.getEpisodeById(id: episodes[0]).subscribe(
-                onSuccess: { [weak self] episode in
-                    guard let me = self else { return }
-                    me.sections.append(SectionType.episodes(episodes: [episode.convertToUIModel()]))
-                    me.viewState.accept(.success)
-                },
-                onFailure: { [weak self] error in
-                    guard let me = self else { return }
-                    print("Error getting episode")
-                    me.viewState.accept(.error(error))
+        Task.init {
+            do {
+                var episodesUIModels: [RMCharacterDetailsEpisodeUIModel]?
+                if episodes.count == 1 {
+                    let episodeResponse = try await episodesRepo.getEpisodeById(id: episodes[0])
+                    episodesUIModels = [episodeResponse.convertToUIModel()]
+                } else {
+                    let episodeResponse = try await episodesRepo.getEpisodesByIds(ids: episodes)
+                    episodesUIModels = episodeResponse.map { $0.convertToUIModel() }
                 }
-            ).disposed(by: disposeBag)
-        } else {
-            episodesRepo.getEpisodesByIds(ids: episodes).subscribe(
-                onSuccess: { [weak self] episodes in
-                    guard let me = self else { return }
-                    let episodesUIModels = episodes.map { $0.convertToUIModel() }
-                    me.sections.append(SectionType.episodes(episodes: episodesUIModels))
-                    me.viewState.accept(.success)
-                },
-                onFailure: { [weak self] error in
-                    guard let me = self else { return }
-                    print("Error getting episodes")
-                    me.viewState.accept(.error(error))
+                sections.append(SectionType.episodes(episodes: episodesUIModels!))
+                await MainActor.run {
+                    viewState = .success
                 }
-            ).disposed(by: disposeBag)
+                
+            } catch let error {
+                print("Error getting episode")
+                viewState = .error(error)
+            }
         }
     }
 }

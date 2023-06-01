@@ -5,18 +5,16 @@
 //  Created by Samuel Mengistu on 1/30/23.
 //
 
-import RxSwift
-import RxCocoa
+import Combine
 
-class RMEpisodeDetailViewModel {
+@MainActor
+class RMEpisodeDetailViewModel: ObservableObject {
     
     private let episodesRepo: RMEpisodesRepository
     
     private let charactersRepo: RMCharactersRepository
     
-    private let disposeBag = DisposeBag()
-    
-    var viewState: BehaviorRelay<RMViewState> = BehaviorRelay(value: .initial)
+    @Published var viewState: RMViewState = .initial
     
     public private(set) var sections: [RMEpisodeDetailViewModel.SectionType] = []
     
@@ -38,35 +36,40 @@ class RMEpisodeDetailViewModel {
     // MARK: Public
     
     func fetchEpisodeDetails(episodeId: Int) {
-        
-        episodesRepo.getEpisodeById(id: episodeId).flatMap({ episode -> Single<[RMCharacter]> in
-            let characterIds: [Int] = episode.characters.map {
-                if let number = $0.getLastNumberInUrl() {
-                    return number
-                }
+        Task.init {
+            do {
+                let episode = try await episodesRepo.getEpisodeById(id: episodeId)
                 
-                return -1
-            }.filter { number in number >= 0 }
-            
-            self.sections = [
-                .information(episode: self.convertEpisodeToUIInfo(episode: episode))
-            ]
-            return self.charactersRepo.getCharactersByIds(ids: characterIds)
-        }).subscribe(
-            onSuccess: { [weak self] characters in
-                guard let me = self else { return }
-                me.sections.append(.characters(characters: characters))
-                me.viewState.accept(.success)
-            },
-            onFailure: { [weak self] error in
-                guard let me = self else { return }
+                let characterIds = getCharacterIds(episode: episode)
+                
+                self.sections = [
+                    .information(episode: self.convertEpisodeToUIInfo(episode: episode))
+                ]
+                
+                let characters = try await charactersRepo.getCharactersByIds(ids: characterIds)
+                
+                sections.append(.characters(characters: characters))
+                viewState = .success
+            } catch let error {
                 print("Error getting episode details")
-                me.viewState.accept(.error(error))
-            }).disposed(by: disposeBag)
-        
+                viewState = .error(error)
+            }
+        }
     }
     
     // MARK: Private
+    
+    private func getCharacterIds(episode: RMEpisode) -> [Int] {
+        let characterIds: [Int] = episode.characters.map {
+            if let number = $0.getLastNumberInUrl() {
+                return number
+            }
+            
+            return -1
+        }.filter { number in number >= 0 }
+        
+        return characterIds
+    }
     
     private func convertEpisodeToUIInfo(episode: RMEpisode) -> [RMEpisodeInformationUIModel] {
         return [

@@ -36,8 +36,6 @@
 		A04170C529F6E3E8000AE307 /* RMLocationsResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04170C429F6E3E8000AE307 /* RMLocationsResponse.swift */; };
 		A04170C829F6E411000AE307 /* RMViewStates.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04170C729F6E411000AE307 /* RMViewStates.swift */; };
 		A048DDEC298DBBF00070B282 /* RMPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A048DDEB298DBBF00070B282 /* RMPickerViewController.swift */; };
-		A060C74129F6EC8900D71E1D /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = A060C74029F6EC8900D71E1D /* RxCocoa */; };
-		A060C74329F6EC8900D71E1D /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A060C74229F6EC8900D71E1D /* RxSwift */; };
 		A060C74629F6ECE900D71E1D /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = A060C74529F6ECE900D71E1D /* Alamofire */; };
 		A060C74929F6ED1A00D71E1D /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = A060C74829F6ED1A00D71E1D /* Kingfisher */; };
 		A06D221C29833ADB009D258B /* RMEpisodeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A06D221A29833ADB009D258B /* RMEpisodeCollectionViewCell.swift */; };
@@ -205,8 +203,6 @@
 			files = (
 				A060C74929F6ED1A00D71E1D /* Kingfisher in Frameworks */,
 				A060C74629F6ECE900D71E1D /* Alamofire in Frameworks */,
-				A060C74329F6EC8900D71E1D /* RxSwift in Frameworks */,
-				A060C74129F6EC8900D71E1D /* RxCocoa in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -928,8 +924,6 @@
 			);
 			name = "RickAndMortyApp 2.0";
 			packageProductDependencies = (
-				A060C74029F6EC8900D71E1D /* RxCocoa */,
-				A060C74229F6EC8900D71E1D /* RxSwift */,
 				A060C74529F6ECE900D71E1D /* Alamofire */,
 				A060C74829F6ED1A00D71E1D /* Kingfisher */,
 			);
@@ -962,7 +956,6 @@
 			);
 			mainGroup = A0823A3C297F1449003F5F2E;
 			packageReferences = (
-				A060C73F29F6EC8900D71E1D /* XCRemoteSwiftPackageReference "RxSwift" */,
 				A060C74429F6ECE900D71E1D /* XCRemoteSwiftPackageReference "Alamofire" */,
 				A060C74729F6ED1A00D71E1D /* XCRemoteSwiftPackageReference "Kingfisher" */,
 			);
@@ -1303,14 +1296,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		A060C73F29F6EC8900D71E1D /* XCRemoteSwiftPackageReference "RxSwift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/ReactiveX/RxSwift";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 6.0.0;
-			};
-		};
 		A060C74429F6ECE900D71E1D /* XCRemoteSwiftPackageReference "Alamofire" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Alamofire/Alamofire";
@@ -1330,16 +1315,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		A060C74029F6EC8900D71E1D /* RxCocoa */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = A060C73F29F6EC8900D71E1D /* XCRemoteSwiftPackageReference "RxSwift" */;
-			productName = RxCocoa;
-		};
-		A060C74229F6EC8900D71E1D /* RxSwift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = A060C73F29F6EC8900D71E1D /* XCRemoteSwiftPackageReference "RxSwift" */;
-			productName = RxSwift;
-		};
 		A060C74529F6ECE900D71E1D /* Alamofire */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = A060C74429F6ECE900D71E1D /* XCRemoteSwiftPackageReference "Alamofire" */;

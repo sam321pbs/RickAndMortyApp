@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import RxSwift
+import Combine
 
 class RMEpisodeDetailViewController: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
@@ -19,7 +19,7 @@ class RMEpisodeDetailViewController: UIViewController {
     
     var episodeUrl: String?
     
-    private let disposeBag = DisposeBag()
+    private var cancellable: AnyCancellable?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,11 +41,10 @@ class RMEpisodeDetailViewController: UIViewController {
                 charactersRepo: RMCharactersRepositoryImpl(dataSouce: RMCharactersDataSourceImpl())
             )
         
-        viewModel.viewState.subscribe(
-            onNext: { [weak self] viewState in
-                guard let me = self else { return }
-                me.onViewStateUpdated(viewState)
-            }).disposed(by: disposeBag)
+        cancellable = viewModel.$viewState.sink { [weak self] state in
+            guard let me = self else { return }
+            me.onViewStateUpdated(state)
+        }
         
         if let episodeNumber = episodeUrl?.getLastNumberInUrl() {
             print(episodeNumber)
