@@ -18,8 +18,8 @@ The Rick and Morty App is an immersive iOS application designed to showcase a co
 ## Built Using 
 - Combination of Storyboard and Swift UI
 - Alamofire 
-- Rx Swift
+- Combine
+- Asynchronous functions
 - MVVM 
 - Repository 
 - Kingfisher
-- RxCocoa
