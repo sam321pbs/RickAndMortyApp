@@ -11,23 +11,15 @@ import Combine
 @MainActor
 final class RMCharactersViewModel: ObservableObject {
     
-    private let repo: RMCharactersRepository
-    
-    private var nextPage: Int?
+    @Injected(\.charactersRepo) private var charactersRepo: RMCharactersRepository
     
     @Published var viewState: RMViewState = .initial
+    
+    private var nextPage: Int?
     
     var isLoadingAdditionalCharacters = false
     
     var characters: [RMCharacter] = []
-
-    // MARK: - Init
-    
-    init(
-        repo: RMCharactersRepository
-    ) {
-        self.repo = repo
-    }
     
     // MARK: - Public
     
@@ -36,7 +28,7 @@ final class RMCharactersViewModel: ObservableObject {
         
         Task.init {
             do {
-                let charactersResponse = try await repo.getCharactersByPage(page: 1)
+                let charactersResponse = try await charactersRepo.getCharactersByPage(page: 1)
                 handleSuccessResponse(response: charactersResponse)
             } catch let error {
                 print("Error getting characters")
@@ -54,7 +46,7 @@ final class RMCharactersViewModel: ObservableObject {
         
         Task.init {
             do {
-                let charactersResponse = try await repo.getCharactersByPage(page: self.nextPage ?? 1)
+                let charactersResponse = try await charactersRepo.getCharactersByPage(page: self.nextPage ?? 1)
                 handleSuccessResponse(response: charactersResponse)
                 isLoadingAdditionalCharacters = false
             } catch let error {

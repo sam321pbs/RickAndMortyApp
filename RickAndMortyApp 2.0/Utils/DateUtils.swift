@@ -7,7 +7,7 @@
 
 import UIKit
 
-/// Helps with dates
+/// Helps with formatting dates
 struct DateUtils {
     
     // https://nsdateformatter.com

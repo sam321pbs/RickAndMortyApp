@@ -5,7 +5,7 @@
 //  Created by Samuel Mengistu on 1/26/23.
 //
 
-struct RMEpisodesDataSourceImpl: RMEpisodesDataSource {
+struct RMEpisodesRemoteDataSourceImpl: RMEpisodesRemoteDataSource {
 
     func getEpisodeById(id: Int) async throws -> RMEpisode {
         return try await DataSourceHelper.makeSingleRequest(RMApi.getEpisodesByIdsDataRequest(ids: [id]))

@@ -15,7 +15,7 @@ class RMEpisodeDetailViewController: UIViewController {
     
     static let identifier = "RMEpisodeDetailViewController"
     
-    public private(set) var viewModel: RMEpisodeDetailViewModel!
+    let viewModel: RMEpisodeDetailViewModel = .init()
     
     var episodeUrl: String?
     
@@ -36,11 +36,6 @@ class RMEpisodeDetailViewController: UIViewController {
     }
     
     private func setupViewModel() {
-        viewModel = .init(
-                episodesRepo: RMEpisodesRepositoryImpl(dataSouce: RMEpisodesDataSourceImpl()),
-                charactersRepo: RMCharactersRepositoryImpl(dataSouce: RMCharactersDataSourceImpl())
-            )
-        
         cancellable = viewModel.$viewState.sink { [weak self] state in
             guard let me = self else { return }
             me.onViewStateUpdated(state)
@@ -48,7 +43,7 @@ class RMEpisodeDetailViewController: UIViewController {
         
         if let episodeNumber = episodeUrl?.getLastNumberInUrl() {
             print(episodeNumber)
-            viewModel?.fetchEpisodeDetails(episodeId: episodeNumber)
+            viewModel.fetchEpisodeDetails(episodeId: episodeNumber)
         }
     }
     

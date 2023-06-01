@@ -28,6 +28,17 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "A078C1102A290C2800830300"
+               BuildableName = "RickAndMortyAppUnitTests.xctest"
+               BlueprintName = "RickAndMortyAppUnitTests"
+               ReferencedContainer = "container:RickAndMortyApp 2.0.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

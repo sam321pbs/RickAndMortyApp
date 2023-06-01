@@ -8,11 +8,7 @@
 import SwiftUI
 
 struct RMSettingsView: View {
-    let viewModel: RMSettingsViewViewModel
-    
-    init(viewModel: RMSettingsViewViewModel) {
-        self.viewModel = viewModel
-    }
+    private let viewModel: RMSettingsViewViewModel = .init()
     
     var body: some View {
         NavigationView {
@@ -47,6 +43,6 @@ struct RMSettingsView: View {
 
 struct RMSettingsView_Previews: PreviewProvider {
     static var previews: some View {
-        RMSettingsView(viewModel: RMSettingsViewViewModel())
+        RMSettingsView()
     }
 }

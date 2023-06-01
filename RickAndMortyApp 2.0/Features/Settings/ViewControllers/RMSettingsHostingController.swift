@@ -12,11 +12,10 @@ import StoreKit
 
 final class RMSettingsHostingController: UIHostingController<RMSettingsView> {
     
-    private var viewModel: RMSettingsViewViewModel!
+    private let viewModel: RMSettingsViewViewModel = .init()
     
     required init?(coder: NSCoder) {
-        viewModel = RMSettingsViewViewModel()
-        super.init(coder: coder, rootView: RMSettingsView(viewModel: self.viewModel));
+        super.init(coder: coder, rootView: RMSettingsView());
     }
     
     override func viewDidLoad() {

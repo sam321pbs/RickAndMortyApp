@@ -10,7 +10,7 @@ import Combine
 @MainActor
 final class RMLocationDetailViewModel: ObservableObject {
     
-    private var charactersRepo: RMCharactersRepository
+    @Injected(\.charactersRepo) private var charactersRepo: RMCharactersRepository
     
     @Published var viewState: RMViewState = .initial
     
@@ -19,14 +19,6 @@ final class RMLocationDetailViewModel: ObservableObject {
     enum SectionType {
         case information(location: [RMLocationInformationUIModel])
         case characters(characters: [RMCharacter])
-    }
-    
-    // MARK: - Init
-    
-    init(
-        charactersRepo: RMCharactersRepository
-    ) {
-        self.charactersRepo = charactersRepo
     }
     
     // MARK: - Public

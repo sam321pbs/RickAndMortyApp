@@ -15,7 +15,7 @@ final class RMCharacterViewController: UIViewController {
     
     @IBOutlet weak var spinner: UIActivityIndicatorView!
     
-    var viewModel: RMCharactersViewModel!
+    let viewModel: RMCharactersViewModel = .init()
     
     private var cancellable: AnyCancellable?
     
@@ -32,12 +32,6 @@ final class RMCharacterViewController: UIViewController {
     // MARK: - Private
     
     private func setupViewModel() {
-        viewModel = RMCharactersViewModel(
-            repo: RMCharactersRepositoryImpl(
-                dataSouce: RMCharactersDataSourceImpl()
-            )
-        )
-        
         cancellable = viewModel.$viewState.sink { [weak self] state in
             guard let me = self else { return }
             me.updateViewFromState(state)

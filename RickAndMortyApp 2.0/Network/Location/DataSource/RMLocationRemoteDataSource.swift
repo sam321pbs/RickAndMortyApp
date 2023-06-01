@@ -5,7 +5,7 @@
 //  Created by Samuel Mengistu on 1/31/23.
 //
 
-protocol RMLocationDataSource {
+protocol RMLocationRemoteDataSource {
     func getLocationsByPage(page: Int) async throws -> RMLocationsResponse
     func getLocationsByIds(ids: [Int]) async throws -> [RMLocation]
     func getLocationById(id: Int) async throws -> RMLocation

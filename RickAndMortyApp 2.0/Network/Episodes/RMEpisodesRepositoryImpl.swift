@@ -7,21 +7,21 @@
 
 struct RMEpisodesRepositoryImpl: RMEpisodesRepository {
     
-    let dataSouce: RMEpisodesDataSource
+    @Injected(\.episodesRemoteDataSource) private var dataSource: RMEpisodesRemoteDataSource
     
     func getEpisodeById(id: Int) async throws -> RMEpisode {
-        return try await dataSouce.getEpisodeById(id: id)
+        return try await dataSource.getEpisodeById(id: id)
     }
     
     func getEpisodesByPage(page: Int) async throws -> RMEpisodesResponse {
-        return try await dataSouce.getEpisodesByPage(page: page)
+        return try await dataSource.getEpisodesByPage(page: page)
     }
     
     func getEpisodesByIds(ids: [Int]) async throws -> [RMEpisode] {
-        return try await dataSouce.getEpisodesByIds(ids: ids)
+        return try await dataSource.getEpisodesByIds(ids: ids)
     }
     
     func getEpisodesWithFilters(name: String?) async throws -> RMEpisodesResponse {
-        return try await dataSouce.getEpisodesWithFilters(name: name)
+        return try await dataSource.getEpisodesWithFilters(name: name)
     }
 }

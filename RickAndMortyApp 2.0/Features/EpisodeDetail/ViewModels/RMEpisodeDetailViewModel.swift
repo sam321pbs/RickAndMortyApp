@@ -8,11 +8,11 @@
 import Combine
 
 @MainActor
-class RMEpisodeDetailViewModel: ObservableObject {
+final class RMEpisodeDetailViewModel: ObservableObject {
     
-    private let episodesRepo: RMEpisodesRepository
+    @Injected(\.episodesRepo) private var episodesRepo: RMEpisodesRepository
     
-    private let charactersRepo: RMCharactersRepository
+    @Injected(\.charactersRepo) private var charactersRepo: RMCharactersRepository
     
     @Published var viewState: RMViewState = .initial
     
@@ -21,16 +21,6 @@ class RMEpisodeDetailViewModel: ObservableObject {
     enum SectionType {
         case information(episode: [RMEpisodeInformationUIModel])
         case characters(characters: [RMCharacter])
-    }
-    
-    // MARK: Init
-    
-    init(
-        episodesRepo: RMEpisodesRepository,
-        charactersRepo: RMCharactersRepository
-    ) {
-        self.episodesRepo = episodesRepo
-        self.charactersRepo = charactersRepo
     }
     
     // MARK: Public

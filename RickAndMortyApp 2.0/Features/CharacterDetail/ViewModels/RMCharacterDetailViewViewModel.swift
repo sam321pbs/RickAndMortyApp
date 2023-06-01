@@ -7,30 +7,22 @@
 
 import Combine
 
-final class RMCharacterDetailViewViewModel: ObservableObject  {
-    
-    private let episodesRepo: RMEpisodesRepository
-    
-    public var sections: [SectionType] = []
+final class RMCharacterDetailViewViewModel: ObservableObject {
     
     @Published var viewState: RMViewState = .initial
     
-    let character: RMCharacter
+    @Injected(\.episodesRepo) private var episodesRepo: RMEpisodesRepository
     
-    enum SectionType {
-        case photo(imageUrl: String)
-        case information(characterInfo: [RMCharacterDetailInformationUIModel])
-        case episodes(episodes: [RMCharacterDetailsEpisodeUIModel])
-    }
+    public var sections: [SectionType] = []
+    
+    let character: RMCharacter
     
     // MARK: - Init
     
     init(
-        character: RMCharacter,
-        episodesRepo: RMEpisodesRepository
+        character: RMCharacter
     ) {
         self.character = character
-        self.episodesRepo = episodesRepo
         setupSections()
     }
     
@@ -85,5 +77,13 @@ final class RMCharacterDetailViewViewModel: ObservableObject  {
                 viewState = .error(error)
             }
         }
+    }
+}
+
+extension RMCharacterDetailViewViewModel {
+    enum SectionType {
+        case photo(imageUrl: String)
+        case information(characterInfo: [RMCharacterDetailInformationUIModel])
+        case episodes(episodes: [RMCharacterDetailsEpisodeUIModel])
     }
 }

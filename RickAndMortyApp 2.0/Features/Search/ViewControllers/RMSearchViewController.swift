@@ -47,12 +47,8 @@ final class RMSearchViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        searchView.viewModel = RMSearchViewModel(
-            config: config,
-            characterRepo: RMCharactersRepositoryImpl(dataSouce: RMCharactersDataSourceImpl()),
-            episodesRepo: RMEpisodesRepositoryImpl(dataSouce: RMEpisodesDataSourceImpl()),
-            locationsRepo: RMLocationRepositoryImpl(dataSouce: RMLocationDataSourceImpl())
-        )
+        searchView.viewModel = RMSearchViewModel(config: config)
+        
         title = config?.type.title
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(

@@ -5,7 +5,7 @@
 //  Created by Samuel Mengistu on 1/26/23.
 //
 
-protocol RMEpisodesDataSource {
+protocol RMEpisodesRemoteDataSource {
     func getEpisodesByPage(page: Int) async throws -> RMEpisodesResponse
     func getEpisodesByIds(ids: [Int]) async throws -> [RMEpisode]
     func getEpisodeById(id: Int) async throws -> RMEpisode

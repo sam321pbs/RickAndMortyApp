@@ -10,21 +10,15 @@ import Combine
 @MainActor
 final class RMEpisodesViewModel: ObservableObject {
     
-    private var episodesRepo: RMEpisodesRepository
+    @Published var viewState: RMViewState = .initial
+    
+    @Injected(\.episodesRepo) private var episodesRepo: RMEpisodesRepository
     
     var isLoadingMore = false
     
     private var nextPage: Int?
     
-    @Published var viewState: RMViewState = .initial
-    
     var episodes: [RMCharacterDetailsEpisodeUIModel] = []
-    
-    // MARK: - Init
-    
-    init(episodesRepo: RMEpisodesRepository) {
-        self.episodesRepo = episodesRepo
-    }
     
     // MARK: - Public
     

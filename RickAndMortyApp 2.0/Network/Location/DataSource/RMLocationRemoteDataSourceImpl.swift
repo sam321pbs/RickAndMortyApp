@@ -5,7 +5,7 @@
 //  Created by Samuel Mengistu on 1/31/23.
 //
 
-struct RMLocationDataSourceImpl: RMLocationDataSource {
+final class RMLocationRemoteDataSourceImpl: RMLocationRemoteDataSource {
     
     func getLocationsByPage(page: Int) async throws -> RMLocationsResponse {
         return try await DataSourceHelper.makeSingleRequest(RMApi.getLocationsByPageDataRequest(page: page))

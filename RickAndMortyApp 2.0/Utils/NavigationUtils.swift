@@ -20,10 +20,7 @@ struct NavigationUtils {
         let detailVC = storyBoard.instantiateViewController(
             withIdentifier: RMCharacterDetailCollectionViewController.identifier
         ) as! RMCharacterDetailCollectionViewController
-        detailVC.viewModel = .init(
-            character: character,
-            episodesRepo: RMEpisodesRepositoryImpl(dataSouce: RMEpisodesDataSourceImpl())
-        )
+        detailVC.viewModel = .init(character: character)
         detailVC.navigationItem.largeTitleDisplayMode = .never
         
         navigate(navigationController: navigationController, viewController: detailVC)

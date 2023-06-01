@@ -12,19 +12,13 @@ final class RMLocationViewModel: ObservableObject {
     
     @Published var viewState: RMViewState = .initial
     
+    @Injected(\.locationsRepo) private var repo: RMLocationRepository
+    
     public private(set) var isLoadingMore = false
     
     public private(set) var locations: [RMLocation] = []
     
     private var nextPage: Int?
-    
-    private let repo: RMLocationRepository
-    
-    // MARK: - Init
-    
-    init(repo: RMLocationRepository) {
-        self.repo = repo
-    }
     
     // MARK: - Public
     

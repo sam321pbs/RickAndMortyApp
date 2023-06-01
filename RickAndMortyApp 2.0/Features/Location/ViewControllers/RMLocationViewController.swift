@@ -16,7 +16,7 @@ final class RMLocationViewController: UIViewController  {
     
     private var cancellable: AnyCancellable?
     
-    var viewModel: RMLocationViewModel!
+    let viewModel: RMLocationViewModel = .init()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,12 +32,6 @@ final class RMLocationViewController: UIViewController  {
     // MARK: - Private
     
     private func setupViewModel() {
-        viewModel = RMLocationViewModel(
-            repo: RMLocationRepositoryImpl(
-                dataSouce: RMLocationDataSourceImpl()
-            )
-        )
-        
         cancellable = viewModel.$viewState.sink { [weak self] state in
             guard let me = self else { return }
             me.onViewStateUpdated(state: state)

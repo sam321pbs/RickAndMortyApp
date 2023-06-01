@@ -57,6 +57,7 @@ class RMSearchView: UIView {
                 guard let me = self else { return }
                 me.onViewStateUpdated(state)
             }
+            
         }
     }
     

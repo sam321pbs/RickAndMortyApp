@@ -15,11 +15,11 @@ import Combine
 @MainActor
 final class RMSearchViewModel: ObservableObject {
     
-    private let characterRepo: RMCharactersRepository
+    @Injected(\.charactersRepo) private var charactersRepo: RMCharactersRepository
     
-    private let episodesRepo: RMEpisodesRepository
+    @Injected(\.episodesRepo) private var episodesRepo: RMEpisodesRepository
     
-    private let locationsRepo: RMLocationRepository
+    @Injected(\.locationsRepo) private var locationsRepo: RMLocationRepository
     
     private var nextPage: Int?
     
@@ -49,15 +49,9 @@ final class RMSearchViewModel: ObservableObject {
     // MARK: - Init
     
     init(
-        config: RMSearchViewController.Config,
-        characterRepo: RMCharactersRepository,
-        episodesRepo: RMEpisodesRepository,
-        locationsRepo: RMLocationRepository
+        config: RMSearchViewController.Config
     ) {
         self.config = config
-            self.characterRepo = characterRepo
-        self.episodesRepo = episodesRepo
-        self.locationsRepo = locationsRepo
     }
     
     // MARK: - Public
@@ -91,7 +85,7 @@ final class RMSearchViewModel: ObservableObject {
         
         Task.init {
             do {
-                let characterResponse = try await characterRepo.getCharactersWithFilters(name: name, status: status, gender: gender)
+                let characterResponse = try await charactersRepo.getCharactersWithFilters(name: name, status: status, gender: gender)
                 handleCharacterSuccessResponse(response: characterResponse)
             } catch let error {
                 viewState = .error(error)
@@ -107,7 +101,7 @@ final class RMSearchViewModel: ObservableObject {
         
         Task.init {
             do {
-                let characterResponse = try await characterRepo.getCharactersWithFilters(name: name, status: status, gender: gender)
+                let characterResponse = try await charactersRepo.getCharactersWithFilters(name: name, status: status, gender: gender)
                 handleCharacterSuccessResponse(response: characterResponse)
                 isLoadingAdditionalCharacters = false
             } catch let error {

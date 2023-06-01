@@ -14,7 +14,7 @@ final class RMEpisodeViewController: UIViewController {
     
     @IBOutlet weak var spinner: UIActivityIndicatorView!
     
-    var viewModel: RMEpisodesViewModel!
+    let viewModel: RMEpisodesViewModel = .init()
     
     private var cancellable: AnyCancellable?
     
@@ -31,12 +31,6 @@ final class RMEpisodeViewController: UIViewController {
     // MARK: - Private
     
     private func setupViewModel() {
-        viewModel = RMEpisodesViewModel(
-            episodesRepo: RMEpisodesRepositoryImpl(
-                dataSouce: RMEpisodesDataSourceImpl()
-            )
-        )
-        
         cancellable = viewModel.$viewState.sink { [weak self] state in
             guard let me = self else { return }
             me.onViewStateUpdated(state)

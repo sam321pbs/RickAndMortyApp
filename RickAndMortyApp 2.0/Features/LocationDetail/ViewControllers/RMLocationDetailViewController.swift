@@ -18,7 +18,7 @@ class RMLocationDetailViewController: UIViewController {
     
     static let identifier = "RMLocationDetailViewController"
     
-    public private(set) var viewModel: RMLocationDetailViewModel!
+    let viewModel: RMLocationDetailViewModel = .init()
     
     private var cancellable: AnyCancellable?
     
@@ -28,10 +28,6 @@ class RMLocationDetailViewController: UIViewController {
         title = "Location"
     
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(didTapShare))
-        
-        viewModel = .init(
-                charactersRepo: RMCharactersRepositoryImpl(dataSouce: RMCharactersDataSourceImpl())
-            )
         
         cancellable = viewModel.$viewState.sink { [weak self] state in
             guard let me = self else { return }
