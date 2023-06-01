@@ -6,18 +6,16 @@
 //
 
 import Foundation
-import RxSwift
-import RxCocoa
+import Combine
 
-final class RMCharactersViewModel {
+@MainActor
+final class RMCharactersViewModel: ObservableObject {
     
     private let repo: RMCharactersRepository
     
-    private let disposeBag = DisposeBag()
-    
     private var nextPage: Int?
     
-    var state: BehaviorRelay<RMViewState> = BehaviorRelay(value: .initial)
+    @Published var viewState: RMViewState = .initial
     
     var isLoadingAdditionalCharacters = false
     
@@ -34,19 +32,17 @@ final class RMCharactersViewModel {
     // MARK: - Public
     
     func fetchCharacters() {
-        state.accept(.loading)
+        viewState = .loading
         
-        repo.getCharactersByPage(page: 1).subscribe(
-            onSuccess: {[weak self] response in
-                guard let me = self else { return }
-                me.handleSuccessResponse(response: response)
-            },
-            onFailure: {[weak self] error in
-                guard let me = self else { return }
+        Task.init {
+            do {
+                let charactersResponse = try await repo.getCharactersByPage(page: 1)
+                handleSuccessResponse(response: charactersResponse)
+            } catch let error {
                 print("Error getting characters")
-                me.state.accept(.error(error))
+                viewState = .error(error)
             }
-        ).disposed(by: disposeBag)
+        }
     }
     
     func fetchAddtionalCharacters() {
@@ -55,19 +51,18 @@ final class RMCharactersViewModel {
         }
         
         isLoadingAdditionalCharacters = true
-        repo.getCharactersByPage(page: self.nextPage ?? 1).subscribe(
-            onSuccess: {[weak self] response in
-                guard let me = self else { return }
-
-                me.handleSuccessResponse(response: response)
-                me.isLoadingAdditionalCharacters = false
-            },
-            onFailure: {[weak self] error in
-                guard let me = self else { return }
-                self?.isLoadingAdditionalCharacters = false
-                me.state.accept(.error(error))
+        
+        Task.init {
+            do {
+                let charactersResponse = try await repo.getCharactersByPage(page: self.nextPage ?? 1)
+                handleSuccessResponse(response: charactersResponse)
+                isLoadingAdditionalCharacters = false
+            } catch let error {
+                print("Error getting characters")
+                isLoadingAdditionalCharacters = false
+                viewState = .error(error)
             }
-        ).disposed(by: disposeBag)
+        }
     }
     
     // MARK: - Private
@@ -79,6 +74,6 @@ final class RMCharactersViewModel {
             self.nextPage = nil
         }
         characters.append(contentsOf: response.results)
-        state.accept(.success)
+        viewState = .success
     }
 }

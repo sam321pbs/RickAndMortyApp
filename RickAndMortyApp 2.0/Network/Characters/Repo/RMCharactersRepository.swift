@@ -5,16 +5,13 @@
 //  Created by Samuel Mengistu on 1/23/23.
 //
 
-import Foundation
-import RxSwift
-
 protocol RMCharactersRepository {
-    func getCharactersByPage(page: Int) -> Single<RMCharactersResponse>
-    func getCharactersByIds(ids: [Int]) -> Single<[RMCharacter]>
-    func getCharactersById(id: Int) -> Single<RMCharacter>
+    func getCharactersByPage(page: Int) async throws -> RMCharactersResponse
+    func getCharactersByIds(ids: [Int]) async throws -> [RMCharacter]
+    func getCharactersById(id: Int) async throws -> RMCharacter
     func getCharactersWithFilters(
         name: String?,
         status: RMCharacterStatus?,
         gender: RMCharacterGender?
-    ) -> Single<RMCharactersResponse>
+    ) async throws -> RMCharactersResponse
 }

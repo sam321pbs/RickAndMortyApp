@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import RxSwift
+import Combine
 
 protocol RMSearchViewDelegate: AnyObject {
     func rmSearchView(
@@ -27,7 +27,7 @@ class RMSearchView: UIView {
     
     private let searchInputView = RMSearchInputView()
     
-    private let disposeBag = DisposeBag()
+    private var cancellable: AnyCancellable?
     
     private let spinner: UIActivityIndicatorView = {
         let spinner = UIActivityIndicatorView(style: .large)
@@ -53,12 +53,10 @@ class RMSearchView: UIView {
     
     var viewModel: RMSearchViewModel! {
         didSet {
-            viewModel.state.asObservable().subscribe(
-                onNext: { [weak self] state in
-                    guard let me = self else { return }
-                    me.onViewStateUpdated(state)
-                    
-                }).disposed(by: disposeBag)
+            cancellable = viewModel.$viewState.sink { [weak self] state in
+                guard let me = self else { return }
+                me.onViewStateUpdated(state)
+            }
         }
     }
     

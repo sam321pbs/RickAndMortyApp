@@ -5,14 +5,12 @@
 //  Created by Samuel Mengistu on 1/31/23.
 //
 
-import RxSwift
-
 protocol RMLocationRepository {
-    func getLocationsByPage(page: Int) -> Single<RMLocationsResponse>
-    func getLocationsByIds(ids: [Int]) -> Single<[RMLocation]>
-    func getLocationById(id: Int) -> Single<RMLocation>
+    func getLocationsByPage(page: Int) async throws -> RMLocationsResponse
+    func getLocationsByIds(ids: [Int]) async throws -> [RMLocation]
+    func getLocationById(id: Int) async throws -> RMLocation
     func getLocationsWithFilters(
         name: String?,
         type: String?
-    ) -> Single<RMLocationsResponse>
+    ) async throws -> RMLocationsResponse
 }

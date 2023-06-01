@@ -5,25 +5,23 @@
 //  Created by Samuel Mengistu on 1/26/23.
 //
 
-import RxSwift
-
 struct RMEpisodesRepositoryImpl: RMEpisodesRepository {
     
     let dataSouce: RMEpisodesDataSource
     
-    func getEpisodeById(id: Int) -> Single<RMEpisode> {
-        return dataSouce.getEpisodeById(id: id)
+    func getEpisodeById(id: Int) async throws -> RMEpisode {
+        return try await dataSouce.getEpisodeById(id: id)
     }
     
-    func getEpisodesByPage(page: Int) -> Single<RMEpisodesResponse> {
-        return dataSouce.getEpisodesByPage(page: page)
+    func getEpisodesByPage(page: Int) async throws -> RMEpisodesResponse {
+        return try await dataSouce.getEpisodesByPage(page: page)
     }
     
-    func getEpisodesByIds(ids: [Int]) -> Single<[RMEpisode]> {
-        return dataSouce.getEpisodesByIds(ids: ids)
+    func getEpisodesByIds(ids: [Int]) async throws -> [RMEpisode] {
+        return try await dataSouce.getEpisodesByIds(ids: ids)
     }
     
-    func getEpisodesWithFilters(name: String?) -> Single<RMEpisodesResponse> {
-        return dataSouce.getEpisodesWithFilters(name: name)
+    func getEpisodesWithFilters(name: String?) async throws -> RMEpisodesResponse {
+        return try await dataSouce.getEpisodesWithFilters(name: name)
     }
 }

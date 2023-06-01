@@ -5,23 +5,21 @@
 //  Created by Samuel Mengistu on 1/31/23.
 //
 
-import RxSwift
-
 struct RMLocationDataSourceImpl: RMLocationDataSource {
     
-    func getLocationsByPage(page: Int) -> Single<RMLocationsResponse> {
-        return DataSourceHelper.makeSingleAlamoRequest(RMApi.getLocationsByPageDataRequest(page: page))
+    func getLocationsByPage(page: Int) async throws -> RMLocationsResponse {
+        return try await DataSourceHelper.makeSingleRequest(RMApi.getLocationsByPageDataRequest(page: page))
     }
     
-    func getLocationsByIds(ids: [Int]) -> Single<[RMLocation]> {
-        return DataSourceHelper.makeSingleAlamoRequest(RMApi.getLocationsByIdsDataRequest(ids: ids))
+    func getLocationsByIds(ids: [Int]) async throws -> [RMLocation] {
+        return try await DataSourceHelper.makeSingleRequest(RMApi.getLocationsByIdsDataRequest(ids: ids))
     }
     
-    func getLocationById(id: Int) -> Single<RMLocation> {
-        return DataSourceHelper.makeSingleAlamoRequest(RMApi.getLocationsByIdsDataRequest(ids: [id]))
+    func getLocationById(id: Int) async throws -> RMLocation {
+        return try await DataSourceHelper.makeSingleRequest(RMApi.getLocationsByIdsDataRequest(ids: [id]))
     }
     
-    func getLocationsWithFilters(name: String?, type: String?) -> Single<RMLocationsResponse> {
-        return DataSourceHelper.makeSingleAlamoRequest(RMApi.getLocationsWithFiltersDataRequest(name: name, type: type))
+    func getLocationsWithFilters(name: String?, type: String?) async throws -> RMLocationsResponse {
+        return try await DataSourceHelper.makeSingleRequest(RMApi.getLocationsWithFiltersDataRequest(name: name, type: type))
     }
 }

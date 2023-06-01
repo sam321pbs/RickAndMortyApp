@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import RxSwift
+import Combine
 
 class RMLocationDetailViewController: UIViewController {
 
@@ -20,7 +20,7 @@ class RMLocationDetailViewController: UIViewController {
     
     public private(set) var viewModel: RMLocationDetailViewModel!
     
-    private let disposeBag = DisposeBag()
+    private var cancellable: AnyCancellable?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,10 +33,10 @@ class RMLocationDetailViewController: UIViewController {
                 charactersRepo: RMCharactersRepositoryImpl(dataSouce: RMCharactersDataSourceImpl())
             )
         
-        viewModel.viewState.subscribe(onNext: { [weak self] state in
+        cancellable = viewModel.$viewState.sink { [weak self] state in
             guard let me = self else { return }
             me.onViewStateUpdated(state)
-        }).disposed(by: disposeBag)
+        }
         
         collectionView.delegate = self
         collectionView.dataSource = self

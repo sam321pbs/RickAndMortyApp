@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import RxSwift
+import Combine
 
 final class RMLocationViewController: UIViewController  {
     
@@ -14,7 +14,7 @@ final class RMLocationViewController: UIViewController  {
     
     @IBOutlet weak var spinner: UIActivityIndicatorView!
     
-    private let disposeBag = DisposeBag()
+    private var cancellable: AnyCancellable?
     
     var viewModel: RMLocationViewModel!
     
@@ -38,12 +38,10 @@ final class RMLocationViewController: UIViewController  {
             )
         )
         
-        viewModel.state.asObservable().subscribe(
-            onNext: { [weak self] state in
-                guard let me = self else { return }
-                me.onViewStateUpdated(state: state)
-                
-            }).disposed(by: disposeBag)
+        cancellable = viewModel.$viewState.sink { [weak self] state in
+            guard let me = self else { return }
+            me.onViewStateUpdated(state: state)
+        }
         
         viewModel.fetchLocations()
     }

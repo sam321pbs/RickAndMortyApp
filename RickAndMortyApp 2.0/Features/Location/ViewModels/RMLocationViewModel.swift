@@ -5,12 +5,12 @@
 //  Created by Samuel Mengistu on 1/31/23.
 //
 
-import RxSwift
-import RxCocoa
+import Combine
 
-final class RMLocationViewModel {
+@MainActor
+final class RMLocationViewModel: ObservableObject {
     
-    var state: BehaviorRelay<RMViewState> = BehaviorRelay(value: .initial)
+    @Published var viewState: RMViewState = .initial
     
     public private(set) var isLoadingMore = false
     
@@ -19,8 +19,6 @@ final class RMLocationViewModel {
     private var nextPage: Int?
     
     private let repo: RMLocationRepository
-    
-    private let disposeBag = DisposeBag()
     
     // MARK: - Init
     
@@ -46,15 +44,14 @@ final class RMLocationViewModel {
     // MARK: - Private
     
     private func fetch(page: Int) {
-        repo.getLocationsByPage(page: page).subscribe(
-            onSuccess: {[weak self] response in
-                guard let me = self else { return }
-                me.handleEpisodeResponse(response)
-            }, onFailure: {[weak self] error in
-                guard let me = self else { return }
-                me.handleError(error)
+        Task.init {
+            do {
+                let locationResponse = try await repo.getLocationsByPage(page: page)
+                handleEpisodeResponse(locationResponse)
+            } catch let error {
+                handleError(error)
             }
-        ).disposed(by: disposeBag)
+        }
     }
     
     private func handleEpisodeResponse(_ response: RMLocationsResponse) {
@@ -65,12 +62,12 @@ final class RMLocationViewModel {
         }
         locations.append(contentsOf: response.results)
         self.isLoadingMore = false
-        state.accept(.success)
+        viewState = .success
     }
     
     private func handleError(_ error: Error) {
         print("Error getting episodes")
         self.isLoadingMore = false
-        state.accept(.error(error))
+        viewState = .error(error)
     }
 }

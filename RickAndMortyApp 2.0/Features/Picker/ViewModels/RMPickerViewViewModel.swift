@@ -5,11 +5,11 @@
 //  Created by Samuel Mengistu on 2/6/23.
 //
 
-import RxCocoa
+import Combine
 
-final class RMPickerViewViewModel {
+final class RMPickerViewViewModel: ObservableObject {
     
     var pickerData: [String] = []
     
-    var selectedItem: BehaviorRelay<String?> = BehaviorRelay(value: nil)
+    @Published var selectedItem: String? = nil
 }

@@ -8,7 +8,7 @@
 import UIKit
 import SafariServices
 import SwiftUI
-import RxSwift
+import Combine
 
 struct NavigationUtils {
     private static var storyBoard: UIStoryboard {
@@ -76,9 +76,9 @@ struct NavigationUtils {
         
         pickerVC.navigationItem.largeTitleDisplayMode = .never
         pickerVC.viewModel.pickerData = pickerData
-        pickerVC.viewModel.selectedItem.subscribe(onNext: { item in
+        pickerVC.viewModel.$selectedItem.sink { item in
             onItemSelected(item)
-        })
+        }
         
         guard let navigationController = navigationController else {
             print("controllers are nil")

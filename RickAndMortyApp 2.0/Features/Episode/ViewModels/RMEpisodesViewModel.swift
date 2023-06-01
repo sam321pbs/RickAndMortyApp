@@ -5,20 +5,18 @@
 //  Created by Samuel Mengistu on 1/27/23.
 //
 
-import RxSwift
-import RxCocoa
+import Combine
 
-final class RMEpisodesViewModel {
+@MainActor
+final class RMEpisodesViewModel: ObservableObject {
     
     private var episodesRepo: RMEpisodesRepository
     
     var isLoadingMore = false
     
-    private let disposeBag = DisposeBag()
-    
     private var nextPage: Int?
     
-    var state: BehaviorRelay<RMViewState> = BehaviorRelay(value: .initial)
+    @Published var viewState: RMViewState = .initial
     
     var episodes: [RMCharacterDetailsEpisodeUIModel] = []
     
@@ -31,16 +29,16 @@ final class RMEpisodesViewModel {
     // MARK: - Public
     
     func fetchEpisodesFirstPage() {
-        state.accept(.loading)
-        episodesRepo.getEpisodesByPage(page: 1).subscribe(
-            onSuccess: {[weak self] response in
-                guard let me = self else { return }
-                me.handleEpisodeResponse(response)
-            }, onFailure: {[weak self] error in
-                guard let me = self else { return }
-                me.handleError(error)
+        viewState = .loading
+        
+        Task.init {
+            do {
+                let episodesResponse = try await episodesRepo.getEpisodesByPage(page: 1)
+                handleEpisodeResponse(episodesResponse)
+            } catch let error {
+                handleError(error)
             }
-        ).disposed(by: disposeBag)
+        }
     }
     
     func fetchAdditionalEpisodes() {
@@ -49,17 +47,16 @@ final class RMEpisodesViewModel {
         }
          
         isLoadingMore = true
-        episodesRepo.getEpisodesByPage(page: nextPage).subscribe(
-            onSuccess: {[weak self] response in
-                guard let me = self else { return }
-                me.isLoadingMore = false
-                me.handleEpisodeResponse(response)
-                
-            }, onFailure: {[weak self] error in
-                guard let me = self else { return }
-                me.handleError(error)
+        
+        Task.init {
+            do {
+                let episodesResponse = try await episodesRepo.getEpisodesByPage(page: nextPage)
+                isLoadingMore = false
+                handleEpisodeResponse(episodesResponse)
+            } catch let error {
+                handleError(error)
             }
-        ).disposed(by: disposeBag)
+        }
     }
     
     // MARK: - private
@@ -73,12 +70,12 @@ final class RMEpisodesViewModel {
         episodes.append(contentsOf: response.results.map{
             $0.convertToUIModel()
         })
-        state.accept(.success)
+        viewState = .success
     }
     
     private func handleError(_ error: Error) {
         print("Error getting episodes")
         isLoadingMore = false
-        state.accept(.error(error))
+        viewState = .error(error)
     }
 }
