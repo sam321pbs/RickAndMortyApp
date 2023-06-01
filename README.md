@@ -23,3 +23,4 @@ The Rick and Morty App is an immersive iOS application designed to showcase a co
 - MVVM 
 - Repository 
 - Kingfisher
+- Dependency Injection
