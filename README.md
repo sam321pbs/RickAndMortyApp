@@ -24,3 +24,4 @@ The Rick and Morty App is an immersive iOS application designed to showcase a co
 - Repository 
 - Kingfisher
 - Dependency Injection
+- Includes unit tests
