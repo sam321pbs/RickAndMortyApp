@@ -26,17 +26,22 @@ final class RMEpisodeViewController: UIViewController {
         addSearchButton()
         
         setupViewModel()
+        fetchData()
     }
     
     // MARK: - Private
+    
+    private func fetchData() {
+        Task.init {
+            await viewModel.fetchEpisodesFirstPage()
+        }
+    }
     
     private func setupViewModel() {
         cancellable = viewModel.$viewState.sink { [weak self] state in
             guard let me = self else { return }
             me.onViewStateUpdated(state)
         }
-        
-        viewModel.fetchEpisodesFirstPage()
     }
     
     private func addSearchButton() {

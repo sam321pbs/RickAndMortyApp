@@ -7,12 +7,11 @@
 
 import Combine
 
-@MainActor
 final class RMEpisodesViewModel: ObservableObject {
     
     @Published var viewState: RMViewState = .initial
     
-    @Injected(\.episodesRepo) private var episodesRepo: RMEpisodesRepository
+    @Injected(\.episodesRepo) var episodesRepo: RMEpisodesRepository
     
     var isLoadingMore = false
     
@@ -20,34 +19,40 @@ final class RMEpisodesViewModel: ObservableObject {
     
     var episodes: [RMCharacterDetailsEpisodeUIModel] = []
     
+    init() {}
+    
     // MARK: - Public
     
-    func fetchEpisodesFirstPage() {
+    func fetchEpisodesFirstPage() async {
         viewState = .loading
         
-        Task.init {
-            do {
-                let episodesResponse = try await episodesRepo.getEpisodesByPage(page: 1)
+        do {
+            let episodesResponse = try await episodesRepo.getEpisodesByPage(page: 1)
+            await MainActor.run {
                 handleEpisodeResponse(episodesResponse)
-            } catch let error {
+            }
+        } catch let error {
+            await MainActor.run {
                 handleError(error)
             }
         }
     }
     
-    func fetchAdditionalEpisodes() {
+    func fetchAdditionalEpisodes() async {
         guard let nextPage = nextPage else {
             return
         }
          
         isLoadingMore = true
         
-        Task.init {
-            do {
-                let episodesResponse = try await episodesRepo.getEpisodesByPage(page: nextPage)
-                isLoadingMore = false
+        do {
+            let episodesResponse = try await episodesRepo.getEpisodesByPage(page: nextPage)
+            isLoadingMore = false
+            await MainActor.run {
                 handleEpisodeResponse(episodesResponse)
-            } catch let error {
+            }
+        } catch let error {
+            await MainActor.run {
                 handleError(error)
             }
         }
@@ -64,6 +69,7 @@ final class RMEpisodesViewModel: ObservableObject {
         episodes.append(contentsOf: response.results.map{
             $0.convertToUIModel()
         })
+        
         viewState = .success
     }
     

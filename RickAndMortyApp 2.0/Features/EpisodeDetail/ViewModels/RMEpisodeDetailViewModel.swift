@@ -7,43 +7,42 @@
 
 import Combine
 
-@MainActor
 final class RMEpisodeDetailViewModel: ObservableObject {
     
-    @Injected(\.episodesRepo) private var episodesRepo: RMEpisodesRepository
+    @Injected(\.episodesRepo) var episodesRepo: RMEpisodesRepository
     
-    @Injected(\.charactersRepo) private var charactersRepo: RMCharactersRepository
+    @Injected(\.charactersRepo) var charactersRepo: RMCharactersRepository
     
     @Published var viewState: RMViewState = .initial
     
     public private(set) var sections: [RMEpisodeDetailViewModel.SectionType] = []
     
-    enum SectionType {
-        case information(episode: [RMEpisodeInformationUIModel])
-        case characters(characters: [RMCharacter])
-    }
+    // MARK: Init
+    
+    init() {}
     
     // MARK: Public
     
-    func fetchEpisodeDetails(episodeId: Int) {
-        Task.init {
-            do {
-                let episode = try await episodesRepo.getEpisodeById(id: episodeId)
-                
-                let characterIds = getCharacterIds(episode: episode)
-                
-                self.sections = [
-                    .information(episode: self.convertEpisodeToUIInfo(episode: episode))
-                ]
-                
-                let characters = try await charactersRepo.getCharactersByIds(ids: characterIds)
-                
-                sections.append(.characters(characters: characters))
-                viewState = .success
-            } catch let error {
-                print("Error getting episode details")
-                viewState = .error(error)
+    func fetchEpisodeDetails(episodeId: Int) async {
+        do {
+            let episode = try await episodesRepo.getEpisodeById(id: episodeId)
+            
+            let characterIds = getCharacterIds(episode: episode)
+            
+            self.sections = [
+                .information(episode: self.convertEpisodeToUIInfo(episode: episode))
+            ]
+            
+            let characters = try await charactersRepo.getCharactersByIds(ids: characterIds)
+            
+            await MainActor.run {
+                self.sections.append(.characters(characters: characters))
+                self.viewState = .success
             }
+            
+        } catch let error {
+            print("Error getting episode details")
+            viewState = .error(error)
         }
     }
     
@@ -68,5 +67,12 @@ final class RMEpisodeDetailViewModel: ObservableObject {
             .init(title: "Episode", value: episode.episode),
             .init(title: "Created", value: DateUtils.convertToReadableShortDate(from: episode.created))
         ]
+    }
+}
+
+extension RMEpisodeDetailViewModel {
+    enum SectionType {
+        case information(episode: [RMEpisodeInformationUIModel])
+        case characters(characters: [RMCharacter])
     }
 }

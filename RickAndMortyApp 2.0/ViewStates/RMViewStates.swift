@@ -7,9 +7,25 @@
 
 import Foundation
 
-enum RMViewState {
+enum RMViewState: Equatable {
+    
     case initial
     case loading
     case success
     case error(Error)
+    
+    static func == (lhs: RMViewState, rhs: RMViewState) -> Bool {
+        switch (lhs, rhs) {
+        case (let .initial, let .initial):
+            return true
+        case (.loading, .loading):
+            return true
+        case (.success, .success):
+            return true
+        case (let .error(error1), let .error(error2)):
+            return true
+        default:
+            return false
+        }
+    }
 }

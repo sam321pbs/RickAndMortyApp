@@ -8,10 +8,9 @@
 import Foundation
 import Combine
 
-@MainActor
 final class RMCharactersViewModel: ObservableObject {
     
-    @Injected(\.charactersRepo) private var charactersRepo: RMCharactersRepository
+    @Injected(\.charactersRepo) var charactersRepo: RMCharactersRepository
     
     @Published var viewState: RMViewState = .initial
     
@@ -21,36 +20,44 @@ final class RMCharactersViewModel: ObservableObject {
     
     var characters: [RMCharacter] = []
     
+    init() {}
+    
     // MARK: - Public
     
-    func fetchCharacters() {
-        viewState = .loading
+    func fetchCharacters() async {
+        await MainActor.run {
+            viewState = .loading
+        }
         
-        Task.init {
-            do {
-                let charactersResponse = try await charactersRepo.getCharactersByPage(page: 1)
+        do {
+            let charactersResponse = try await charactersRepo.getCharactersByPage(page: 1)
+            await MainActor.run {
                 handleSuccessResponse(response: charactersResponse)
-            } catch let error {
-                print("Error getting characters")
+            }
+        } catch let error {
+            print("Error getting characters")
+            await MainActor.run {
                 viewState = .error(error)
             }
         }
     }
     
-    func fetchAddtionalCharacters() {
+    func fetchAddtionalCharacters() async {
         if isLoadingAdditionalCharacters || nextPage == -1 || nextPage == nil {
             return
         }
         
         isLoadingAdditionalCharacters = true
         
-        Task.init {
-            do {
-                let charactersResponse = try await charactersRepo.getCharactersByPage(page: self.nextPage ?? 1)
+        do {
+            let charactersResponse = try await charactersRepo.getCharactersByPage(page: self.nextPage ?? 1)
+            await MainActor.run {
                 handleSuccessResponse(response: charactersResponse)
                 isLoadingAdditionalCharacters = false
-            } catch let error {
-                print("Error getting characters")
+            }
+        } catch let error {
+            print("Error getting characters")
+            await MainActor.run {
                 isLoadingAdditionalCharacters = false
                 viewState = .error(error)
             }

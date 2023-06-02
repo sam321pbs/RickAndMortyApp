@@ -27,17 +27,22 @@ final class RMCharacterViewController: UIViewController {
         addSearchButton()
         
         setupViewModel()
+        fetchData()
     }
     
     // MARK: - Private
+    
+    private func fetchData() {
+        Task.init {
+            await viewModel.fetchCharacters()
+        }
+    }
     
     private func setupViewModel() {
         cancellable = viewModel.$viewState.sink { [weak self] state in
             guard let me = self else { return }
             me.updateViewFromState(state)
         }
-        
-        viewModel.fetchCharacters()
     }
     
     private func updateViewFromState(_ state: RMViewState) {

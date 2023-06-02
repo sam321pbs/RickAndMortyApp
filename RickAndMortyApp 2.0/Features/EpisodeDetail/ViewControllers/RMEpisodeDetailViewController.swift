@@ -33,6 +33,7 @@ class RMEpisodeDetailViewController: UIViewController {
         setupCompositionalLayout()
         registerCells()
         setupViewModel()
+        fetchEpisodes()
     }
     
     private func setupViewModel() {
@@ -40,10 +41,14 @@ class RMEpisodeDetailViewController: UIViewController {
             guard let me = self else { return }
             me.onViewStateUpdated(state)
         }
-        
-        if let episodeNumber = episodeUrl?.getLastNumberInUrl() {
-            print(episodeNumber)
-            viewModel.fetchEpisodeDetails(episodeId: episodeNumber)
+    }
+    
+    private func fetchEpisodes() {
+        Task.init {
+            if let episodeNumber = episodeUrl?.getLastNumberInUrl() {
+                print(episodeNumber)
+                await viewModel.fetchEpisodeDetails(episodeId: episodeNumber)
+            }
         }
     }
     

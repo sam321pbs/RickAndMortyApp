@@ -30,6 +30,14 @@ final class RMCharacterDetailCollectionViewController: UICollectionViewControlle
         setupCompositionalLayout()
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(didTapShare))
+        
+        fetchEpisodes()
+    }
+    
+    private func fetchEpisodes() {
+        Task.init {
+            await viewModel.fetchEpisodes()
+        }
     }
     
     private func render(state: RMViewState) {

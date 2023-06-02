@@ -11,9 +11,9 @@ final class RMCharacterDetailViewViewModel: ObservableObject {
     
     @Published var viewState: RMViewState = .initial
     
-    @Injected(\.episodesRepo) private var episodesRepo: RMEpisodesRepository
+    @Injected(\.episodesRepo) var episodesRepo: RMEpisodesRepository
     
-    public var sections: [SectionType] = []
+    var sections: [SectionType] = []
     
     let character: RMCharacter
     
@@ -45,10 +45,9 @@ final class RMCharacterDetailViewViewModel: ObservableObject {
                     ]
             )
         ]
-        fetchEpisodes()
     }
     
-    private func fetchEpisodes() {
+    func fetchEpisodes() async {
         let episodes: [Int] = character.episode.map {
             if let number = $0.getLastNumberInUrl() {
                 return number
@@ -57,25 +56,25 @@ final class RMCharacterDetailViewViewModel: ObservableObject {
             return -1
         }.filter { number in number >= 0 }
         
-        Task.init {
-            do {
-                var episodesUIModels: [RMCharacterDetailsEpisodeUIModel]?
-                if episodes.count == 1 {
-                    let episodeResponse = try await episodesRepo.getEpisodeById(id: episodes[0])
-                    episodesUIModels = [episodeResponse.convertToUIModel()]
-                } else {
-                    let episodeResponse = try await episodesRepo.getEpisodesByIds(ids: episodes)
-                    episodesUIModels = episodeResponse.map { $0.convertToUIModel() }
-                }
-                sections.append(SectionType.episodes(episodes: episodesUIModels!))
-                await MainActor.run {
-                    viewState = .success
-                }
-                
-            } catch let error {
-                print("Error getting episode")
-                viewState = .error(error)
+        do {
+            var episodesUIModels: [RMCharacterDetailsEpisodeUIModel]?
+            if episodes.count == 1 {
+                let episodeResponse = try await episodesRepo.getEpisodeById(id: episodes[0])
+                episodesUIModels = [episodeResponse.convertToUIModel()]
+            } else {
+                let episodeResponse = try await episodesRepo.getEpisodesByIds(ids: episodes)
+                episodesUIModels = episodeResponse.map { $0.convertToUIModel() }
             }
+            
+            sections.append(SectionType.episodes(episodes: episodesUIModels!))
+            
+            await MainActor.run {
+                viewState = .success
+            }
+            
+        } catch let error {
+            print("Error getting episode")
+            viewState = .error(error)
         }
     }
 }

@@ -50,7 +50,9 @@ extension RMCharacterViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if (indexPath.row == viewModel.characters.count - 1) && !viewModel.isLoadingAdditionalCharacters {
             // fetch more when we reach the bottom
-            viewModel.fetchAddtionalCharacters()
+            Task.init {
+                await viewModel.fetchAddtionalCharacters()
+            }
         }
     }
 }

@@ -53,7 +53,10 @@ extension RMEpisodeViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if (indexPath.row == viewModel.episodes.count - 1) && !(viewModel.isLoadingMore) {
             // fetch more when we reach the bottom
-            viewModel.fetchAdditionalEpisodes()
+            
+            Task.init {
+                await viewModel.fetchAdditionalEpisodes()
+            }
         }
     }
 }
